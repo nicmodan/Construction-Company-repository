@@ -61,10 +61,10 @@ const getTokenForm = request =>{
     return null
 }
 
-// projectRouter.get('/', async (request, response)=>{
-//     const prj = await project.find({}).populate('account')
-//     response.json(prj)
-// })
+projectRouter.get('/', async (request, response)=>{
+    const prj = await project.find({})//.populate('account')
+    response.json(prj)
+})
 
 projectRouter.get('/:id', async (request, response)=>{
     // note required 
