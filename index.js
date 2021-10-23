@@ -4,8 +4,9 @@ const logger = require('./utils/logger')
 const config = require('./utils/config')
 
 const server = http.createServer(app)
-
-server.listen(config.PORT, ()=>{
+const PORT = process.env.PORT || 3001
+// config.PORT
+server.listen(PORT, ()=>{
     logger.info(`Server Working on port ${config.PORT}`)
 })
 
