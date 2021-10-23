@@ -1,3 +1,4 @@
+const config = require('../utils/config')
 const profileRouter = require('express').Router()
 const profile = require('../model/profile')
 const user = require('../model/account')
@@ -5,6 +6,9 @@ const multer = require('multer')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const path = require('path')
+
+// const {GridFsStorage} = require('multer-gridfs-storage')
+// const crypto = require('crypto')
 
 let profileId = 0
 
@@ -25,6 +29,25 @@ const UploadImageInfo = multer.diskStorage({
             path.extname(file.originalname))
     }
 })
+
+// const uploadImageInfo = new GridFsStorage({
+//     url: config.MONGODB_URL,
+//     file: (req, file)=>{
+//         return new Promise((resolve, reject)=>{
+//             crypto.randomBytes(16, (err, buf)=>{
+//                 if (err){
+//                     return reject(err)
+//                 }
+//                 const filename = buf.toString('hex') + path.extname(file.originalname)
+//                 const fileInfo = {
+//                     filename: filename,
+//                     buketName: 'uploads'
+//                 }
+//                 resolve(fileInfo)
+//             })
+//         })
+//     }
+// })
 
 const storeImageInfo = multer({
     storage: UploadImageInfo,
@@ -105,14 +128,16 @@ profileRouter.post('/upload', storeImageInfo.array('image', 4) ,async (request, 
     const requestFiles = []
     for(let i = 0; i<request.files.length; i++){
         
-        // let img = fs.readFileSync(request.files[i].path)
-        // let encoded_img = img.toString('base64')
-        // const imgObj = {
-        //     contentType: request.files[i].mimetype,
-        //     data: new  Buffer.alloc(5000000, encoded_img, 'base64')
-        // }
-        // requestFiles.push(imgObj)
-        requestFiles.push({path: request.files[i].filename})
+        let img = fs.readFileSync(request.files[i].path)
+        let encoded_img = img.toString('base64')
+        const imgObj = {
+            // filename: request.files[i].filename,
+            // fileId: request.files[i].id
+            contentType: request.files[i].mimetype,
+            data: img //new  Buffer.alloc(5000000, encoded_img, 'base64')
+        }
+        requestFiles.push(imgObj)
+        // requestFiles.push({path: request.files[i].filename})
     }
 
     console.log(request.files)

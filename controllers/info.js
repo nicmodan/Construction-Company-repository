@@ -1,7 +1,14 @@
+const config = require('../utils/config')
 const infoRouter = require('express').Router()
 const user = require('../model/account')
 const info = require('../model/info')
 const multer = require('multer')
+
+
+// const {GridFsStorage} = require('multer-gridfs-storage')
+// const crypto = require('crypto')
+
+
 const path = require('path')
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
@@ -30,6 +37,25 @@ const uploadImageInfo = multer.diskStorage({
             path.extname(file.originalname))
     }
 })
+
+// const uploadImageInfo = new GridFsStorage({
+//     url: config.MONGODB_URL,
+//     file: (req, file)=>{
+//         return new Promise((resolve, reject)=>{
+//             crypto.randomBytes(16, (err, buf)=>{
+//                 if (err){
+//                     return reject(err)
+//                 }
+//                 const filename = buf.toString('hex') + path.extname(file.originalname)
+//                 const fileInfo = {
+//                     filename: filename,
+//                     buketName: 'uploads'
+//                 }
+//                 resolve(fileInfo)
+//             })
+//         })
+//     }
+// })
 
 const storeImageInfo = multer({
     storage: uploadImageInfo,
@@ -93,8 +119,8 @@ infoRouter.post('/', async (request, reponse)=>{
 })
 // tage the value of the iamge inpute file as logo
 infoRouter.post('/upload', storeImageInfo.single('logo'), async (req, res)=>{
-    // const img = fs.readFileSync(req.file.path)
-    // const encoded_img = img.toString('base64')
+    const img = fs.readFileSync(req.file.path)
+    const encoded_img = img.toString('base64')
 
     const token = getTokenForm(req)
     const decodedToken = jwt.verify(token, process.env.SECRET)
@@ -112,9 +138,11 @@ infoRouter.post('/upload', storeImageInfo.single('logo'), async (req, res)=>{
         company_logo: {
             alt: 'logo of company',
             image: {
-                // contentType: req.file.mimetype,
-                // data:new Buffer.alloc (5000000, encoded_img, 'base64')
-                path: req.file.filename
+                // filename: req.file.filename,
+                // fileId: req.file.id
+                contentType: req.file.mimetype,
+                data: img//new Buffer.alloc (5000000, encoded_img, 'base64')
+                // path: req.file.filename
             }
         },
         accounts: acc_user._id

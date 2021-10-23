@@ -16,11 +16,13 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
+    "gridfs-stream": "^1.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.5",
     "mongoose-unique-validation": "^0.1.0",
     "mongoose-unique-validator": "^2.0.3",
-    "multer": "^1.4.3"
+    "multer": "^1.4.3",
+    "multer-gridfs-storage": "^5.0.2"
   },
   "devDependencies": {
     "nodeman": "^1.1.2",

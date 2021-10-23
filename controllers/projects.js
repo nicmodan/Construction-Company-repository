@@ -1,3 +1,4 @@
+const config = require('../utils/config')
 const projectRouter = require('express').Router()
 const project = require('../model/projects')
 const account = require('../model/account')
@@ -7,6 +8,12 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 
+
+
+const {GridFsStorage} = require('multer-gridfs-storage')
+const Grid = require('gridfs-stream')
+const crypto = require('crypto')
+
 const uploadProjectImg = multer.diskStorage({
     destination: `projects`,
     filename: (req, file, cb)=>{
@@ -14,6 +21,24 @@ const uploadProjectImg = multer.diskStorage({
             path.extname(file.originalname))
     }
 })
+// const uploadProjectImg = new GridFsStorage({
+//     url: config.MONGODB_URL,
+//     file: (req, file)=>{
+//         return new Promise((resolve, reject)=>{
+//             crypto.randomBytes(16, (err, buf)=>{
+//                 if (err){
+//                     return reject(err)
+//                 }
+//                 const filename = buf.toString('hex') + path.extname(file.originalname)
+//                 const fileInfo = {
+//                     filename: filename,
+//                     buketName: 'uploads'
+//                 }
+//                 resolve(fileInfo)
+//             })
+//         })
+//     }
+// })
 const storeProjectImg = multer({
     storage: uploadProjectImg,
     limits: {
@@ -93,7 +118,7 @@ projectRouter.post('/', async (request, response)=>{
 })
 
 projectRouter.post('/upload', storeProjectImg.array('image', 4), async (request, response)=>{
-    console.log(request.files)
+    // console.log(request.files)
     const requestFile = []
     // const img = fs.readFileSync(request.files.path)
     // const encoded_img = img.toString('base64')
@@ -110,15 +135,17 @@ projectRouter.post('/upload', storeProjectImg.array('image', 4), async (request,
     
     for(let i = 0; i<request.files.length; i++){
 
-        // const img = fs.readFileSync(request.files[i].path)
-        // const encoded_img = img.toString('base64')
-        // const obj = {   
-        //     contentType: request.files[i].mimetype,
-        //     data: new  Buffer.alloc(5000000, encoded_img, 'base64') 
-        // }
-        // requestFile.push(obj)
+        const img = fs.readFileSync(request.files[i].path)
+        const encoded_img = img.toString('base64')
+        const obj = {   
+            // filename: request.files[i].filename,
+            // fileId: request.files[i].id
+            contentType: request.files[i].mimetype,
+            data: img //new  Buffer.alloc(5000000, encoded_img, 'base64') 
+        }
+        requestFile.push(obj)
 
-        requestFile.push({path: request.files[i].filename})
+        // requestFile.push({path: request.files[i].filename})
     }
 
     const prjImg = {

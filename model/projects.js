@@ -19,9 +19,9 @@ const projectSchema = mongoose.Schema({
     date: Date,
     images: [
        {
-        // data: Buffer,
-        // contentType: String
-        path: String,
+        data: Buffer,
+        contentType: String
+        // path: String,
        } 
     ],
     // profile: {

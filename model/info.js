@@ -4,9 +4,9 @@ const companySchema = new mongoose.Schema({
     company_logo: {
         alt: String,
         image: {
-            // data: Buffer,
-            // contentType: String
-            path: String
+            data: Buffer,
+            contentType: String
+            // path: String
         }
     },
     company_name: {
