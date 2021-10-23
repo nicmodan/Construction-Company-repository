@@ -72,7 +72,7 @@ projectRouter.get('/:id', async (request, response)=>{
     //     })
     // }
     const num = request.params.id.substring(1)
-    const resulte = await project.find({accounts: num}).maxTimeMS(100);//.sort({_id:-1}).limit(1);
+    const resulte = await project.find({accounts: num})//.maxTimeMS(100);//.sort({_id:-1}).limit(1);
     response.json(resulte)
     // const prj = await project.findById(id)
     // response.json(prj)
