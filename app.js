@@ -18,7 +18,8 @@ const mongoose = require('mongoose')
 
 logger.info(`connecting to ${config.MONGODB_URL}`)
 
-mongoose.connect(config.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+mongoose.connect(config.MONGODB_URL || 'mongodb://localhost:27017/Todoapp', 
+    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(()=>{
         logger.info('connected to mongoDb')
     }).catch((error)=>{
