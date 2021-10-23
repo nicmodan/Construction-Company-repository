@@ -8,12 +8,6 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 
-
-
-const {GridFsStorage} = require('multer-gridfs-storage')
-const Grid = require('gridfs-stream')
-const crypto = require('crypto')
-
 const uploadProjectImg = multer.diskStorage({
     destination: `projects`,
     filename: (req, file, cb)=>{
@@ -78,7 +72,7 @@ projectRouter.get('/:id', async (request, response)=>{
     //     })
     // }
     const num = request.params.id.substring(1)
-    const resulte = await project.find({accounts: num}).maxTimeMS(100);//.sort({_id:-1}).limit(1);
+    const resulte = await project.find({accounts: num})//.maxTimeMS(100);//.sort({_id:-1}).limit(1);
     response.json(resulte)
     // const prj = await project.findById(id)
     // response.json(prj)
